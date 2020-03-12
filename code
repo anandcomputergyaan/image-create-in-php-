@@ -1,0 +1,33 @@
+
+    //unset($_SESSION['captcha_error']);
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < 5; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    //session_start(); 
+    $_SESSION['captcha_code']=$randomString;
+
+    $img = imagecreate(100, 30);
+    
+    $textbgcolor = imagecolorallocate($img, 173, 230, 181);
+    $textcolor = imagecolorallocate($img, 1, 1, 1);
+    $line_color = imagecolorallocate($img, 0,204,150); 
+for($i=0;$i<10;$i++) {
+    imageline($img,0,rand()%50,100,rand()%50,$line_color);
+}
+
+$pixel_color = imagecolorallocate($img, 0,0,255);
+for($i=0;$i<1000;$i++) {
+    imagesetpixel($img,rand()%100,rand()%50,$pixel_color);
+}  
+
+    if ($randomString != '') {
+        $txt = $randomString;
+       // $font = imageloadfont(20);
+        imagestring($img, 10, 25, 5, $txt, $textcolor);
+        ob_start();
+        imagepng($img,'uploads/captcha_img/cap_image.png');
+        /*$image_captcha = '<img src="data:image/png;base64,%s"/ width="100">';
+     printf($image_captcha, base64_encode(ob_get_clean()));die;*/
